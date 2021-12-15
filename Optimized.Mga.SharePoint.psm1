@@ -1,24 +1,23 @@
-#region functions
 function Get-MgaSharePointFiles {
     <#
-    .SYNOPSIS
-    With Get-MgaSharePointFiles you can get a list of sharepoint files in a specific site. 
-    
-    .DESCRIPTION
-    This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient.
-    
-    .PARAMETER TenantName
-    This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient
+.SYNOPSIS
+With Get-MgaSharePointFiles you can get a list of sharepoint files in a specific site. 
 
-    .PARAMETER Site
-    This is the sitename where the files are stored in.
-    
-    .PARAMETER ChildFolders
-    Add childfolders as an array firstfolder,subfolder,subsubfolder
-    
-    .EXAMPLE
-    $SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team_' -ChildFolders 'O365Reports'
-    #>
+.DESCRIPTION
+This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient.
+
+.PARAMETER TenantName
+This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient
+
+.PARAMETER Site
+This is the sitename where the files are stored in.
+
+.PARAMETER ChildFolders
+Add childfolders as an array firstfolder,subfolder,subsubfolder
+
+.EXAMPLE
+$SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team_' -ChildFolders 'O365Reports'
+#>
     [CmdletBinding()]
     param (
         [Parameter(mandatory , HelpMessage = 'This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient')]
@@ -42,9 +41,10 @@ function Get-MgaSharePointFiles {
         Write-Verbose "Get-MgaSharePointFiles: begin: Site is $Sitename" 
         $SPURL = 'https://graph.microsoft.com/v1.0/sites/{0}.sharepoint.com:/sites/{1}/' -f $TenantName, $Site
         Write-Verbose "Get-MgaSharePointFiles: begin: SPURL is $SPURL" 
-        $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:"
+        $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root"
         $i = 1
         if ($ChildFolders) {
+            $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:"
             foreach ($ChildFolder in $ChildFolders) {
                 if ($i -eq $($ChildFolders).count) {
                     $SPChildrenURL = "$($SPChildrenURL)/$($ChildFolder):/children"
@@ -56,7 +56,7 @@ function Get-MgaSharePointFiles {
             }
         } 
         else {
-            $SPChildrenURL = "$($ChildrenURL)/children"
+            $SPChildrenURL = "$($SPChildrenURL)/children"
         }
     }
     process {
@@ -69,6 +69,7 @@ function Get-MgaSharePointFiles {
         return $SPItems
     }
 }
+
 function Download-MgaSharePointFiles {
     <#
     .SYNOPSIS
