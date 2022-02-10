@@ -244,4 +244,39 @@ General notes
         return $UploadResult
     }
 }
+
+function Get-MgaSharePointList {
+    [CmdletBinding()]
+    param (
+        [Parameter(mandatory, HelpMessage = 'Add the sitename')]
+        [string]
+        $Site,
+        [Parameter(mandatory, HelpMessage = 'Add the Listname')]
+        [string]
+        $List,
+        [Parameter(mandatory , HelpMessage = 'This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient')]
+        [string]
+        $TenantName
+    )  
+    begin {
+        Write-Verbose "Get-MgaSharePointList: begin: site: $Site"
+        Write-Verbose "Get-MgaSharePointList: begin: list: $List"
+        if ($TenantName -like '*.*') {
+            $TenantName = $TenantName.split('.')[0]
+            Write-Verbose "Get-MgaSharePointList: begin: Converted TenantName to $TenantName"
+        }
+        else {
+            Write-Verbose "Get-MgaSharePointList: begin: TenantName is $TenantName"
+        }
+    }
+    process {        
+        $SPSiteURL = 'https://graph.microsoft.com/v1.0/sites/{0}.sharepoint.com:/sites/{1}/' -f $TenantName, $Site
+        $SPSite = Get-Mga -URL $SPSiteURL
+        $SPListURL = 'https://graph.microsoft.com/v1.0/sites/{0}/lists/{1}/items?expand=fields' -f $SPSite.id, $List
+        $Response = Get-Mga -URL $SPListURL 
+    }    
+    end {
+        return $Response
+    }
+}
 #endregion
