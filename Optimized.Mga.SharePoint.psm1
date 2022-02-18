@@ -188,8 +188,7 @@ General notes
                 $File = Get-Item $ItemPath
                 $LocalFileBytes = [System.IO.File]::ReadAllBytes($File)
             }
-        }
-        else {
+        } else {
             $File = $Item
             $LocalFileBytes = [System.IO.File]::ReadAllBytes($File.FullName)
         }
