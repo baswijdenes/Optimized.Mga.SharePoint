@@ -9,16 +9,16 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = '.\Optimized.Mga.SharePoint.psm1'
+    RootModule        = '.\Optimized.Mga.Report.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.0.4'
+    ModuleVersion     = '0.0.0.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID              = '978bfa07-b20f-46d2-b45b-4dfa7a277240'
+    GUID              = 'ad1f4329-f713-4176-8073-b6c5f92f9f52'
 
     # Author of this module
     Author            = 'Bas Wijdenes'
@@ -30,7 +30,7 @@
     Copyright         = 'Bas Wijdenes. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'Custom SharePoint functions together with the Optimized.Mga. See the Project Site for more.'
+    Description       = 'Custom AzureAD reports together with the Optimized.Mga. See the Project Site for more.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Get-MgaSharePointFiles', 'Download-MgaSharePointFiles', 'Get-MgaSharePointList'
+    FunctionsToExport = "Get-MgaReportdirectoryAudit","Get-MgaReportdirectoryAudits","Get-MgaReportEmailActivityCounts","Get-MgaReportEmailActivityUserCounts","Get-MgaReportEmailActivityUserDetail","Get-MgaReportEmailAppUsageAppsUserCounts","Get-MgaReportEmailAppUsageUserCounts","Get-MgaReportEmailAppUsageUserDetail","Get-MgaReportEmailAppUsageVersionsUserCounts","Get-MgaReportMailboxUsageDetail","Get-MgaReportMailboxUsageMailboxCounts","Get-MgaReportMailboxUsageQuotaStatusMailboxCounts","Get-MgaReportMailboxUsageStorage","Get-MgaReportOffice365ActivationCounts","Get-MgaReportOffice365ActivationsUserCounts","Get-MgaReportOffice365ActivationsUserDetail","Get-MgaReportOffice365GroupsActivityCounts","Get-MgaReportOffice365GroupsActivityDetail","Get-MgaReportOffice365GroupsActivityFileCounts","Get-MgaReportOffice365GroupsActivityGroupCounts","Get-MgaReportOffice365GroupsActivityStorage","Get-MgaReportOneDriveActivityFileCounts","Get-MgaReportOneDriveActivityUserCounts","Get-MgaReportOneDriveActivityUserDetail","Get-MgaReportOneDriveUsageAccountCounts","Get-MgaReportOneDriveUsageAccountDetail","Get-MgaReportOneDriveUsageFileCounts","Get-MgaReportOneDriveUsageStorage","Get-MgaReportprovisioningObjectSummary","Get-MgaReportSharePointActivityFileCounts","Get-MgaReportSharePointActivityPages","Get-MgaReportSharePointActivityUserCounts","Get-MgaReportSharePointActivityUserDetail","Get-MgaReportSharePointSiteUsageDetail","Get-MgaReportSharePointSiteUsageFileCounts","Get-MgaReportSharePointSiteUsagePages","Get-MgaReportSharePointSiteUsageSiteCounts","Get-MgaReportSharePointSiteUsageStorage","Get-MgaReportsignIn","Get-MgaReportsignIns","Get-MgaReportSkypeForBusinessActivityCounts","Get-MgaReportSkypeForBusinessActivityUserCounts","Get-MgaReportSkypeForBusinessActivityUserDetail","Get-MgaReportSkypeForBusinessDeviceUsageDistributionUserCounts","Get-MgaReportSkypeForBusinessDeviceUsageUserCounts","Get-MgaReportSkypeForBusinessDeviceUsageUserDetail","Get-MgaReportSkypeForBusinessOrganizerActivityCounts","Get-MgaReportSkypeForBusinessOrganizerActivityMinuteCounts","Get-MgaReportSkypeForBusinessOrganizerActivityUserCounts","Get-MgaReportSkypeForBusinessParticipantActivityCounts","Get-MgaReportSkypeForBusinessParticipantActivityMinuteCounts","Get-MgaReportSkypeForBusinessParticipantActivityUserCounts","Get-MgaReportSkypeForBusinessPeerToPeerActivityCounts","Get-MgaReportSkypeForBusinessPeerToPeerActivityMinuteCounts","Get-MgaReportSkypeForBusinessPeerToPeerActivityUserCounts","Get-MgaReportTeamsDeviceUsageDistributionUserCounts","Get-MgaReportTeamsDeviceUsageUserCounts","Get-MgaReportTeamsDeviceUsageUserDetail","Get-MgaReportTeamsUserActivityCounts","Get-MgaReportTeamsUserActivityUserCounts","Get-MgaReportTeamsUserActivityUserDetail","Get-MgaReportYammerActivityCounts","Get-MgaReportYammerActivityUserCounts","Get-MgaReportYammerActivityUserDetail","Get-MgaReportYammerDeviceUsageDistributionUserCounts","Get-MgaReportYammerDeviceUsageUserCounts","Get-MgaReportYammerDeviceUsageUserDetail","Get-MgaReportYammerGroupsActivityCounts","Get-MgaReportYammerGroupsActivityDetail","Get-MgaReportYammerGroupsActivityGroupCounts"
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = '*'
@@ -95,7 +95,7 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = @('Mga', 'MSGraph', 'MicrosoftGraph', 'MSGraphAPI', 'MSGraphReport', 'Microsoft.Graph.API', 'Microsoft.Graph', 'SharePoint')
+            Tags       = @('Mga', 'MSGraph', 'MicrosoftGraph', 'MSGraphAPI', 'MSGraphReport', 'Microsoft.Graph.API', 'Microsoft.Graph', 'Reports')
 
             # A URL to the license for this module.
             # LicenseUri = ''
