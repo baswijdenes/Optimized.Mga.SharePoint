@@ -106,7 +106,22 @@ function Download-MgaSharePointFiles {
     }   
     process {
         try {
-            $ContentInBytes = Invoke-WebRequest -Uri $spitem.'@microsoft.graph.downloadUrl'
+            try {
+                $ContentInBytes = Invoke-WebRequest -Uri $spitem.'@microsoft.graph.downloadUrl'
+            }
+            catch {
+                try {
+                    if ($_.Exception.Message -like "*Internet Explorer engine*") {
+                        $ContentInBytes = Invoke-WebRequest -Uri $spitem.'@microsoft.graph.downloadUrl' -UseBasicParsing
+                    }
+                    else {
+                        throw $_.Exception.Message
+                    }
+                }
+                catch {
+                    throw $_.Exception.Message
+                }
+            }
             Write-Verbose "Download-MgaSharePointFiles: process: retrieved $($SPItem.Name) content"
             if ($OutputFolder) {
                 Write-Verbose "Download-MgaSharePointFiles: process: Exporting $($SPItem.Name) content"
@@ -188,7 +203,8 @@ General notes
                 $File = Get-Item $ItemPath
                 $LocalFileBytes = [System.IO.File]::ReadAllBytes($File)
             }
-        } else {
+        }
+        else {
             $File = $Item
             $LocalFileBytes = [System.IO.File]::ReadAllBytes($File.FullName)
         }
