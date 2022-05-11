@@ -12,7 +12,7 @@
     RootModule        = '.\Optimized.Mga.SharePoint.psm1' 
 
     # Version number of this module.
-    ModuleVersion     = '0.0.0.5'
+    ModuleVersion     = '0.0.0.6'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -24,7 +24,7 @@
     Author            = 'Bas Wijdenes'
 
     # Company or vendor of this module
-    CompanyName       = 'Bas Wijdenes IT Blog'
+    CompanyName       = 'Bas Wijdenes'
 
     # Copyright statement for this module
     Copyright         = 'Bas Wijdenes. All rights reserved.'
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Get-MgaSharePointFiles', 'Download-MgaSharePointFiles', 'Get-MgaSharePointList'
+    FunctionsToExport = 'Get-MgaSharePointFile', 'Download-MgaSharePointFile', 'Get-MgaSharePointList', 'Upload-MgaSharePointFile'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = '*'

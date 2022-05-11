@@ -1,24 +1,32 @@
 #region functions
-function Get-MgaSharePointFiles {
+function Get-MgaSharePointFile {
     <#
-.SYNOPSIS
-With Get-MgaSharePointFiles you can get a list of sharepoint files in a specific site. 
+    .SYNOPSIS
+    With Get-MgaSharePointFile you can get a list of sharepoint files in a specific site. 
 
-.DESCRIPTION
-This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient.
+    .DESCRIPTION
+    With Get-MgaSharePointFile you can get a list of sharepoint files in a specific site. 
+    Keep it mind that it will return all files in the site, use Where-Object to filter results.
 
-.PARAMETER TenantName
-This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient
+    .PARAMETER TenantName
+    This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient
 
-.PARAMETER Site
-This is the sitename where the files are stored in.
+    .PARAMETER Site
+    This is the sitename where the files are stored in.
 
-.PARAMETER ChildFolders
-Add childfolders as an array firstfolder,subfolder,subsubfolder
+    .PARAMETER ChildFolders
+    Add childfolders as an array firstfolder,subfolder,subsubfolder
 
-.EXAMPLE
-$SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team_' -ChildFolders 'O365Reports'
-#>
+    .EXAMPLE
+    $SPItems = Get-MgaSharePointFile -TenantName 'BWIT.onmicrosoft.com' -Site 'Team_' -ChildFolders 'O365Reports'
+
+    .NOTES
+    Author: Bas Wijdenes
+
+    .LINK
+    https://baswijdenes.com/how-to-download-files-from-sharepoint-with-ms-graph-api-and-powershell/
+    https://baswijdenes.com/how-to-upload-files-to-sharepoint-with-ms-graph-api-and-powershell/
+    #>
     [CmdletBinding()]
     param (
         [Parameter(mandatory , HelpMessage = 'This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient')]
@@ -34,18 +42,18 @@ $SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team
     begin {
         if ($TenantName -like '*.*') {
             $TenantName = $TenantName.split('.')[0]
-            Write-Verbose "Get-MgaSharePointFiles: begin: Converted TenantName to $TenantName"
+            Write-Verbose "Get-MgaSharePointFile: begin: Converted TenantName to $TenantName"
         }
         else {
-            Write-Verbose "Get-MgaSharePointFiles: begin: TenantName is $TenantName"
+            Write-Verbose "Get-MgaSharePointFile: begin: TenantName is $TenantName"
         }
-        Write-Verbose "Get-MgaSharePointFiles: begin: Site is $Sitename" 
+        Write-Verbose "Get-MgaSharePointFile: begin: Site is $Sitename" 
         $SPURL = 'https://graph.microsoft.com/v1.0/sites/{0}.sharepoint.com:/sites/{1}/' -f $TenantName, $Site
-        Write-Verbose "Get-MgaSharePointFiles: begin: SPURL is $SPURL" 
-        $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root"
+        Write-Verbose "Get-MgaSharePointFile: begin: SPURL is $SPURL" 
+        $SPChildrenURL = 'https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root'
         $i = 1
         if ($ChildFolders) {
-            $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:"
+            $SPChildrenURL = 'https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:'
             foreach ($ChildFolder in $ChildFolders) {
                 if ($i -eq $($ChildFolders).count) {
                     $SPChildrenURL = "$($SPChildrenURL)/$($ChildFolder):/children"
@@ -63,7 +71,7 @@ $SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team
     process {
         $SPsite = Get-Mga -URL $SPURL
         $SPItemsURL = $($SPChildrenURL) -f $SPSite.id
-        Write-Verbose "Get-MgaSharePointFiles: begin: SPItemsURL is $SPItemsURL" 
+        Write-Verbose "Get-MgaSharePointFile: begin: SPItemsURL is $SPItemsURL" 
         $SPItems = Get-Mga -URL $SPItemsURL
     }
     end {
@@ -71,36 +79,42 @@ $SPItems = Get-MgaSharePointFiles -TenantName 'BWIT.onmicrosoft.com' -Site 'Team
     }
 }
 
-function Download-MgaSharePointFiles {
+function Download-MgaSharePointFile {
     <#
     .SYNOPSIS
-    With Download-MgaSharePointFiles you can download files from a SP Site.
+    With Download-MgaSharePointFile you can download files from a SP Site.
     
     .DESCRIPTION
-    Download-MgaSharePointFiles will only work with Get-MgaSharePointFiles return.
+    Download-MgaSharePointFile will only work with Get-MgaSharePointFile return.
     
     .PARAMETER SPItem
-    This Parameter needs the return from Get-MgaSharePointFiles.
+    This Parameter needs the return from Get-MgaSharePointFile.
     
     .PARAMETER OutputFolder
     This is a FolderPath to where the files need to be exported
     
     .EXAMPLE
     foreach ($Item in $SPItems) {
-        Download-MgaSharePointFiles  -SPItem $Item -OutputFolder 'C:\temp\'
+        Download-MgaSharePointFile  -SPItem $Item -OutputFolder 'C:\temp\'
     }
+
+    .NOTES
+    Author: Bas Wijdenes
+
+    .LINK
+    https://baswijdenes.com/how-to-download-files-from-sharepoint-with-ms-graph-api-and-powershell/
     #>
     [CmdletBinding()]
     param (
         [parameter(mandatory)]
         $SPItem,
-        [parameter(mandatory = $true, ParameterSetName = "OutputFolder")]
+        [parameter(mandatory = $true, ParameterSetName = 'OutputFolder')]
         [string]
         $OutputFolder
     ) 
     begin {
         if (($OutputFolder) -and ($OutputFolder.Substring($OutputFolder.Length - 1, 1) -eq '\')) {
-            Write-Verbose "Download-MgaSharePointFiles: begin: $OutputFolder ends with a '\' script will trim the end"
+            Write-Verbose "Download-MgaSharePointFile: begin: $OutputFolder ends with a '\' script will trim the end"
             $OutputFolder = $OutputFolder.TrimEnd('\')
         }
     }   
@@ -111,7 +125,7 @@ function Download-MgaSharePointFiles {
             }
             catch {
                 try {
-                    if ($_.Exception.Message -like "*Internet Explorer engine*") {
+                    if ($_.Exception.Message -like '*Internet Explorer engine*') {
                         $ContentInBytes = Invoke-WebRequest -Uri $spitem.'@microsoft.graph.downloadUrl' -UseBasicParsing
                     }
                     else {
@@ -122,14 +136,14 @@ function Download-MgaSharePointFiles {
                     throw $_.Exception.Message
                 }
             }
-            Write-Verbose "Download-MgaSharePointFiles: process: retrieved $($SPItem.Name) content"
+            Write-Verbose "Download-MgaSharePointFile: process: retrieved $($SPItem.Name) content"
             if ($OutputFolder) {
-                Write-Verbose "Download-MgaSharePointFiles: process: Exporting $($SPItem.Name) content"
+                Write-Verbose "Download-MgaSharePointFile: process: Exporting $($SPItem.Name) content"
                 [System.IO.file]::WriteAllBytes("$OutputFolder\$($SPItem.Name)", $ContentInBytes.content)
                 $Return = "Exported $($SPItem.Name) in $OutputFolder"
             } 
             else {
-                Write-Verbose "Download-MgaSharePointFiles: process: Converting $($SPItem.Name) content to UTF8 to return"
+                Write-Verbose "Download-MgaSharePointFile: process: Converting $($SPItem.Name) content to UTF8 to return"
                 $Return = ([System.Text.Encoding]::UTF8.GetString($ContentInBytes.content)).substring(2)
             }
         }
@@ -142,36 +156,42 @@ function Download-MgaSharePointFiles {
     }
 }
 
-function Upload-MgaSharePointFiles {
+function Upload-MgaSharePointFile {
     <#
-.SYNOPSIS
+    .SYNOPSIS
+    With Upload-MgaSharePointFiles you can upload files to SharePoint sites and OneDrive.
 
-.DESCRIPTION
-Long description
+    .DESCRIPTION
+    With Upload-MgaSharePointFiles you can upload files to SharePoint sites and OneDrive.
 
-.PARAMETER ItemPath
-Parameter description
+    .PARAMETER ItemPath
+    ItemPath will accept a path string to the item you want to upload to SharePoint.
 
-.PARAMETER Item
-Parameter description
+    .PARAMETER Item
+    The parameter Item will accept an item of object [System.IO.FileSystemInfo]. 
+    Which means that you first use Get-Item -Path C:\temp\blatemp.txt before you start Upload-MgaSharePointFile.
 
-.PARAMETER Type
-Parameter description
+    .PARAMETER Type
+    Type is SharePoint or OneDrive. 
+    The default is SharePoint.
 
-.PARAMETER TenantName
-Parameter description
+    .PARAMETER TenantName
+    This is the URL to sharepoint, but the tenantname (before .onmicrosoft.com) is sufficient'
 
-.PARAMETER Site
-Parameter description
+    .PARAMETER Site
+    This is the sitename where the files are stored in.
 
-.PARAMETER ChildFolders
-Parameter description
+    .PARAMETER ChildFolders
+    Add childfolders as an array firstfolder,subfolder,subsubfolder
 
-.EXAMPLE
-An example
+    .EXAMPLE
+    Upload-MgaSharePointFiles -ItemPath "C:\temp\blatemp.txt" -TenantName 'm365x794103.onmicrosoft.com' -Site 'XXXX'
 
-.NOTES
-General notes
+    .NOTES
+    Author: Bas Wijdenes
+
+    .LINK
+    https://baswijdenes.com/how-to-upload-files-to-sharepoint-with-ms-graph-api-and-powershell/
 #>
     [CmdletBinding()]
     param (
@@ -196,7 +216,7 @@ General notes
     )
     begin {
         if ($PSCmdlet.ParameterSetName -eq 'ItemPath') {
-            if ((Test-path $ItemPath) -eq $false) {
+            if ((Test-Path $ItemPath) -eq $false) {
                 throw "File $ItemPath cannot be found"
             } 
             else {
@@ -210,21 +230,21 @@ General notes
         }
         if ($TenantName -like '*.*') {
             $TenantName = $TenantName.split('.')[0]
-            Write-Verbose "Upload-MgaSharePointFiles: begin: Converted TenantName to $TenantName"
+            Write-Verbose "Upload-MgaSharePointFile: begin: Converted TenantName to $TenantName"
         }
         else {
-            Write-Verbose "Upload-MgaSharePointFiles: begin: TenantName is $TenantName"
+            Write-Verbose "Upload-MgaSharePointFile: begin: TenantName is $TenantName"
         }
-        Write-Verbose "Upload-MgaSharePointFiles: begin: Site is $Site" 
+        Write-Verbose "Upload-MgaSharePointFile: begin: Site is $Site" 
         $SPURL = 'https://graph.microsoft.com/v1.0/sites/{0}.sharepoint.com:/sites/{1}/' -f $TenantName, $Site
-        Write-Verbose "Upload-MgaSharePointFiles: begin: SPURL is $SPURL" 
-        $SPChildrenURL = "https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:"
+        Write-Verbose "Upload-MgaSharePointFile: begin: SPURL is $SPURL" 
+        $SPChildrenURL = 'https://graph.microsoft.com/v1.0/sites/{0}/drive/items/root:'
         $i = 1
         if ($ChildFolders) {
             foreach ($ChildFolder in $ChildFolders) {
                 if ($i -eq $($ChildFolders).count) {
                     $SPChildrenURL = "$($SPChildrenURL)/$($ChildFolder)/{1}:/createUploadSession"
-                    Write-Verbose "Upload-MgaSharePointFiles: begin: ChildFolder URL is $SPChildrenURL"
+                    Write-Verbose "Upload-MgaSharePointFile: begin: ChildFolder URL is $SPChildrenURL"
                 }
                 else {
                     $SPChildrenURL = "$($SPChildrenURL)/$($ChildFolder)"
@@ -246,7 +266,7 @@ General notes
     process {
         $SPsite = Get-Mga -URL $SPURL
         $SPItemsURL = $($SPChildrenURL) -f $SPSite.id, $File.Name
-        Write-Verbose "Upload-MgaSharePointFiles: begin: Upload URL is $SPItemsURL"
+        Write-Verbose "Upload-MgaSharePointFile: begin: Upload URL is $SPItemsURL"
         $uploadUrlResponse = Post-Mga -URL $SPItemsURL
         $contentRange = [string]::Format('bytes 0-{0}/{1}', $($LocalFileBytes.Length - 1), $LocalFileBytes.Length)
         $Header = @{}
@@ -254,7 +274,7 @@ General notes
         $Header.Add('Content-Range', $contentRange)
         $Header.Add('Content-Type', 'octet/stream')
         Write-Verbose $contentRange
-        $UploadResult = Put-Mga -URL $uploadUrlResponse.uploadUrl -InputObject $LocalFileBytes -CustomHeader $Header -verbose
+        $UploadResult = Put-Mga -URL $uploadUrlResponse.uploadUrl -InputObject $LocalFileBytes -CustomHeader $Header -Verbose
     }
     end {
         return $UploadResult
@@ -295,4 +315,9 @@ function Get-MgaSharePointList {
         return $Response
     }
 }
-#endregion
+#endregion functions
+#region aliases
+New-Alias -Name 'Get-MgaSharePointFiles' -Value 'Get-MgaSharePointFile'
+New-Alias -Name 'Download-MgaSharePointFiles' -Value 'Download-MgaSharePointFile'
+New-Alias -Name 'Upload-MgaSharePointFiles' -Value 'Upload-MgaSharePointFile'
+#endregion aliases
